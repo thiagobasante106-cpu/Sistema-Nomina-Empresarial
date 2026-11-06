@@ -1,5 +1,6 @@
 
 from empleado import Empleado
+from bonificable import Bonificable
 
 
 # Empleado con salario fijo y bonificacion por desempeno
@@ -35,3 +36,33 @@ class EmpleadoComision(Empleado):
     def calcular_salario(self):
         comision = self.ventas * (self.porcentaje_comision / 100)
         return self.salario_base + comision
+
+
+# Empleado que hereda de dos clases
+class EmpleadoTiempoCompletoBonificado(EmpleadoTiempoCompleto, Bonificable):
+
+    def __init__(self, nombre, identificacion, salario_base, bonificacion_desempeno):
+        EmpleadoTiempoCompleto.__init__(
+            self, nombre, identificacion, salario_base, bonificacion_desempeno
+        )
+        Bonificable.__init__(self)
+
+    def calcular_salario(self):
+        salario = super().calcular_salario()
+        return salario + self.obtener_bonificaciones()
+
+    def mostrar_informacion(self, mostrar_salario=False,
+                             mostrar_detalles=False,
+                             mostrar_bonificaciones=False):
+
+        informacion = super().mostrar_informacion(
+            mostrar_salario, mostrar_detalles
+        )
+
+        if mostrar_bonificaciones:
+            informacion += (
+                f"\nBonificaciones adicionales: "
+                f"${self.obtener_bonificaciones():,.2f}"
+            )
+
+        return informacion
